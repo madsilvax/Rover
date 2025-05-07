@@ -1,0 +1,64 @@
+[gd_scene load_steps=4 format=3 uid="uid://ww7sklcq5qf1"]
+
+[ext_resource type="Script" path="res://build/scripts/fim.gd" id="1_n3o1t"]
+[ext_resource type="Theme" uid="uid://bwkl20sacsng3" path="res://build/assets/Themes/theme.tres" id="2_fbcgk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rgn0m"]
+
+[node name="fim" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_n3o1t")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0, 0, 0, 1)
+
+[node name="menu_gamerover" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -279.0
+offset_top = -144.0
+offset_right = 279.0
+offset_bottom = 144.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("2_fbcgk")
+
+[node name="Label" type="Label" parent="menu_gamerover"]
+layout_mode = 2
+theme = ExtResource("2_fbcgk")
+text = "OBRIGADO POR JOGAR!"
+
+[node name="HSeparator" type="HSeparator" parent="menu_gamerover"]
+layout_mode = 2
+theme_override_constants/separation = 120
+theme_override_styles/separator = SubResource("StyleBoxEmpty_rgn0m")
+
+[node name="menu inicial" type="Button" parent="menu_gamerover"]
+layout_mode = 2
+text = "menu inicial"
+
+[node name="sair do jogo" type="Button" parent="menu_gamerover"]
+layout_mode = 2
+text = "sair do jogo"
+
+[connection signal="pressed" from="menu_gamerover/menu inicial" to="." method="_on_menu_inicial_pressed"]
+[connection signal="pressed" from="menu_gamerover/sair do jogo" to="." method="_on_sair_do_jogo_pressed"]

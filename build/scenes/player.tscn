@@ -1,0 +1,242 @@
+[gd_scene load_steps=19 format=3 uid="uid://c3duat57gdrb0"]
+
+[ext_resource type="Script" path="res://build/scripts/player.gd" id="1_jfmi3"]
+[ext_resource type="PackedScene" uid="uid://kod0awm1ha4o" path="res://build/assets/@GDQuest/models/gobot/model/gobot.glb" id="2_6qtwl"]
+[ext_resource type="Script" path="res://build/scripts/camera.gd" id="3_363fx"]
+[ext_resource type="PackedScene" uid="uid://bf1lu8stkptoh" path="res://build/assets/Blender/personagem.blend" id="3_fj7tq"]
+[ext_resource type="Script" path="res://build/scripts/hud.gd" id="4_ho1xj"]
+[ext_resource type="PackedScene" uid="uid://bwar55fu6diss" path="res://build/assets/Blender/scan.blend" id="4_wqcd4"]
+[ext_resource type="Theme" uid="uid://bwkl20sacsng3" path="res://build/assets/Themes/theme.tres" id="6_7rmh0"]
+[ext_resource type="VideoStream" path="res://build/assets/Videos/instrucoes.ogv" id="6_25y5d"]
+[ext_resource type="Texture2D" uid="uid://c4npsnwj7uek8" path="res://build/assets/Hud/semente.png" id="7_rfcr3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cj4ss"]
+size = Vector3(1, 1, 2.5)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kaeol"]
+radius = 0.333
+height = 1.4
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_o4kmi"]
+height = 1.0
+radius = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_mh3ku"]
+radius = 0.005
+
+[sub_resource type="Animation" id="Animation_f5jt0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("instrucoes_mov:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1344, 1080)]
+}
+
+[sub_resource type="Animation" id="Animation_4rveu"]
+resource_name = "tutorial"
+length = 34.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("instrucoes_mov:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 33, 34),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1368, 1080), Vector2(1368, 754), Vector2(1368, 754), Vector2(1368, 1080)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dqjr8"]
+_data = {
+"RESET": SubResource("Animation_f5jt0"),
+"tutorial": SubResource("Animation_4rveu")
+}
+
+[sub_resource type="InputEventAction" id="InputEventAction_4uo8h"]
+action = &"esc"
+
+[sub_resource type="Shortcut" id="Shortcut_p1wxc"]
+events = [SubResource("InputEventAction_4uo8h")]
+
+[node name="player" type="CharacterBody3D"]
+collision_mask = 31
+script = ExtResource("1_jfmi3")
+
+[node name="gobot" parent="." instance=ExtResource("2_6qtwl")]
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 0, 0)
+visible = false
+
+[node name="personagem" parent="." instance=ExtResource("3_fj7tq")]
+transform = Transform3D(-0.5, 0, -4.37114e-08, 0, 0.5, 0, 4.37114e-08, 0, -0.5, -0.1, 0, 0)
+
+[node name="scan" parent="." instance=ExtResource("4_wqcd4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.869893, 0)
+
+[node name="scan_box" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="scan_box"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.25)
+shape = SubResource("BoxShape3D_cj4ss")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("CapsuleShape3D_kaeol")
+
+[node name="hurtbox" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hurtbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("CylinderShape3D_o4kmi")
+
+[node name="camera" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("3_363fx")
+
+[node name="horizontal" type="Node3D" parent="camera"]
+
+[node name="vertical" type="Node3D" parent="camera/horizontal"]
+
+[node name="SpringArm3D" type="SpringArm3D" parent="camera/horizontal/vertical"]
+collision_mask = 17
+shape = SubResource("SphereShape3D_mh3ku")
+spring_length = 4.0
+
+[node name="Camera3D" type="Camera3D" parent="camera/horizontal/vertical/SpringArm3D"]
+v_offset = 0.25
+current = true
+
+[node name="hud" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_ho1xj")
+
+[node name="coins_container" type="HBoxContainer" parent="hud"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -320.0
+offset_bottom = 136.0
+grow_horizontal = 0
+alignment = 1
+
+[node name="coin_texture" type="TextureRect" parent="hud/coins_container"]
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("7_rfcr3")
+expand_mode = 3
+
+[node name="HSplitContainer" type="HSplitContainer" parent="hud/coins_container"]
+layout_mode = 2
+
+[node name="coin_label" type="Label" parent="hud/coins_container"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme = ExtResource("6_7rmh0")
+text = "0"
+
+[node name="instrucoes" type="Control" parent="hud"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="instrucoes_mov" type="VideoStreamPlayer" parent="hud/instrucoes"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1344.0
+offset_top = 1080.0
+offset_right = 1264.0
+offset_bottom = 1088.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.3, 0.3)
+size_flags_horizontal = 8
+size_flags_vertical = 8
+stream = ExtResource("6_25y5d")
+autoplay = true
+
+[node name="instrucoes_anim" type="AnimationPlayer" parent="hud/instrucoes"]
+libraries = {
+"": SubResource("AnimationLibrary_dqjr8")
+}
+autoplay = "tutorial"
+
+[node name="pause" type="Control" parent="hud"]
+process_mode = 3
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="hud/pause"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.313726)
+
+[node name="pause_menu" type="VBoxContainer" parent="hud/pause"]
+process_mode = 3
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("6_7rmh0")
+
+[node name="continuar" type="Button" parent="hud/pause/pause_menu"]
+process_mode = 3
+layout_mode = 2
+shortcut = SubResource("Shortcut_p1wxc")
+text = "continuar"
+
+[node name="recomecar" type="Button" parent="hud/pause/pause_menu"]
+process_mode = 3
+layout_mode = 2
+text = "recomeçar"
+
+[node name="sair do jogo" type="Button" parent="hud/pause/pause_menu"]
+process_mode = 3
+layout_mode = 2
+text = "sair do jogo"
+
+[connection signal="body_entered" from="hurtbox" to="." method="_on_hurtbox_body_entered"]
+[connection signal="pressed" from="hud/pause/pause_menu/continuar" to="hud" method="_on_continuar_pressed"]
+[connection signal="pressed" from="hud/pause/pause_menu/recomecar" to="hud" method="_on_recomecar_pressed"]
+[connection signal="pressed" from="hud/pause/pause_menu/sair do jogo" to="hud" method="_on_sair_do_jogo_pressed"]

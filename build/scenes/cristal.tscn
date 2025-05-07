@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://bw3ad7xqigfvk"]
+
+[ext_resource type="PackedScene" uid="uid://bbfonrpiq0t2" path="res://build/assets/Blender/cristal.blend" id="1_k7m7m"]
+[ext_resource type="Script" path="res://build/scripts/cristal.gd" id="2_ccx2d"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_o5rmb"]
+radius = 12.0
+
+[node name="cristal" type="Node3D"]
+script = ExtResource("2_ccx2d")
+
+[node name="cristal" parent="." instance=ExtResource("1_k7m7m")]
+transform = Transform3D(-1.31134e-07, 0, 3, 0, 3, 0, -3, 0, -1.31134e-07, 0, 0, 0)
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 10.4
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_o5rmb")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
